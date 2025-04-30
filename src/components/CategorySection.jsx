@@ -2,9 +2,12 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useDarkMode } from "../../context/DarkModeContext";
 
 function CategorySection({ selectedCategory, onCategoryChange }) {
   const [isMobile, setIsMobile] = useState(false);
+  const { isDarkMode } = useDarkMode();
+  
   const categories = [
     {
       name: "All",
@@ -60,7 +63,7 @@ function CategorySection({ selectedCategory, onCategoryChange }) {
 
   if (isMobile) {
     return (
-      <div className="w-full py-10 px-4">
+      <div className={`w-full py-10 px-4 ${isDarkMode ? "text-white" : ""}`}>
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl font-cormorant-garamond font-bold mb-6">
             Explore by category
@@ -69,7 +72,13 @@ function CategorySection({ selectedCategory, onCategoryChange }) {
             {categories.map((category, index) => (
               <div 
                 key={index}
-                className={`p-4 border ${category.name === selectedCategory ? 'bg-black text-white' : 'bg-white text-black'} transition-colors cursor-pointer`}
+                className={`p-4 ${
+                  category.name === selectedCategory 
+                    ? 'bg-black text-white' 
+                    : isDarkMode 
+                      ? 'bg-black/20 backdrop-blur-md border border-white/10 text-white' 
+                      : 'bg-white text-black'
+                } transition-colors cursor-pointer`}
                 onClick={() => onCategoryChange(category.name)}
               >
                 <h3 className="text-lg font-medium">{category.name}</h3>
@@ -82,7 +91,7 @@ function CategorySection({ selectedCategory, onCategoryChange }) {
   }
 
   return (
-    <div className="relative w-full py-20">
+    <div className={`relative w-full py-20 ${isDarkMode ? "text-white" : ""}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative mb-2">
           <h2 className="text-3xl font-cormorant-garamond font-bold">
@@ -91,14 +100,22 @@ function CategorySection({ selectedCategory, onCategoryChange }) {
           <div className="absolute top-0 right-0 flex">
             <button
               onClick={handleCategoryPrev}
-              className="bg-black text-white p-3 mr-2 hover:bg-gray-800 transition-colors"
+              className={`${
+                isDarkMode 
+                  ? "bg-white text-black hover:bg-neutral-300" 
+                  : "bg-black text-white hover:bg-gray-800"
+              } p-3 mr-2 transition-colors`}
               aria-label="Previous Category"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={handleCategoryNext}
-              className="bg-black text-white p-3 hover:bg-gray-800 transition-colors"
+              className={`${
+                isDarkMode 
+                  ? "bg-white text-black hover:bg-neutral-300" 
+                  : "bg-black text-white hover:bg-gray-800"
+              } p-3 transition-colors`}
               aria-label="Next Category"
             >
               <ChevronRight size={16} />
@@ -138,7 +155,7 @@ function CategorySection({ selectedCategory, onCategoryChange }) {
                         alt={category.name}
                         width={400}
                         height={400}
-                        className="object-cover w-full h-full"
+                        className={`object-cover w-full h-full ${isDarkMode ? "opacity-80" : ""}`}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 w-full p-4">
@@ -148,7 +165,11 @@ function CategorySection({ selectedCategory, onCategoryChange }) {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full bg-black text-white">
+                    <div className={`flex items-center justify-center w-full h-full ${
+                      isDarkMode 
+                        ? "bg-black/50 backdrop-blur-md border border-white/10 text-white" 
+                        : "bg-black text-white"
+                    }`}>
                       <h3 className="text-xl font-medium">{category.name}</h3>
                     </div>
                   )}

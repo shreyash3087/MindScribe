@@ -31,7 +31,7 @@ function InstagramSection() {
 
   return (
     <div>
-      <div className="mt-10">
+      <div className="pt-10">
         <div className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
           <a
             href="https://www.instagram.com/x3_shreyash_x3"

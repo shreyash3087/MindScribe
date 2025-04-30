@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import Footer from "@/components/Footer";
-
+import { DarkModeProvider } from "../../context/DarkModeContext";
 export const metadata = {
   title: {
     default: "MindScribe | Where Thoughts Take Shape",
@@ -24,11 +24,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+      <DarkModeProvider>
         <Navbar />
         <main>
           {children}
         </main>
         <Footer />
+        </DarkModeProvider>
       </body>
     </html>
   );

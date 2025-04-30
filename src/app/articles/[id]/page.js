@@ -16,19 +16,25 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { useDarkMode } from "../../../../context/DarkModeContext";
 
-const ContentBlock = ({ block }) => {
+const ContentBlock = ({ block, isDarkMode }) => {
   if (!block) return null;
+
+  const getClassName = (originalClassName) => {
+    if (!originalClassName) return isDarkMode ? "text-white" : "";
+    return originalClassName + (isDarkMode ? " text-white" : "");
+  };
 
   switch (block.type) {
     case "paragraph":
-      return <p className={block.className}>{block.text}</p>;
+      return <p className={getClassName(block.className)}>{block.text}</p>;
 
     case "heading":
-      return <h2 className={block.className}>{block.text}</h2>;
+      return <h2 className={getClassName(block.className)}>{block.text}</h2>;
 
     case "subheading":
-      return <div className={block.className}>{block.text}</div>;
+      return <div className={getClassName(block.className)}>{block.text}</div>;
 
     case "image":
       return (
@@ -42,34 +48,40 @@ const ContentBlock = ({ block }) => {
     case "container":
       if (block.blocks) {
         return (
-          <div className={block.className}>
+          <div className={getClassName(block.className)}>
             {block.blocks.map((childBlock, index) => (
-              <ContentBlock key={index} block={childBlock} />
+              <ContentBlock
+                key={index}
+                block={childBlock}
+                isDarkMode={isDarkMode}
+              />
             ))}
           </div>
         );
       }
-      return <div className={block.className}>{block.children}</div>;
+      return (
+        <div className={getClassName(block.className)}>{block.children}</div>
+      );
 
     default:
       return null;
   }
 };
 
-const ContentSection = ({ section }) => {
+const ContentSection = ({ section, isDarkMode }) => {
   if (!section) return null;
 
   return (
     <div id={section.id}>
       {section.blocks &&
         section.blocks.map((block, index) => (
-          <ContentBlock key={index} block={block} />
+          <ContentBlock key={index} block={block} isDarkMode={isDarkMode} />
         ))}
     </div>
   );
 };
 
-const TableOfContents = ({ subParts, activeSection }) => {
+const TableOfContents = ({ subParts, activeSection, isDarkMode }) => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -81,11 +93,15 @@ const TableOfContents = ({ subParts, activeSection }) => {
     <div className="mb-6 sticky top-24">
       {subParts.map((part, index) => (
         <div key={index} className="flex items-start mb-1 text-xs">
-          <span className="mr-2">•</span>
+          <span className={`mr-2 ${isDarkMode ? "text-white" : ""}`}>•</span>
           <button
             onClick={() => scrollToSection(part)}
             className={`text-left cursor-pointer ${
               activeSection === part ? "font-semibold" : ""
+            } ${
+              isDarkMode
+                ? "text-white hover:text-gray-300"
+                : "hover:text-gray-700"
             }`}
           >
             {part}
@@ -102,13 +118,15 @@ function ArticlePage() {
   const [activeSection, setActiveSection] = useState("");
   const sectionRefs = useRef({});
   const pathname = usePathname();
+  const { isDarkMode } = useDarkMode();
+
   const iconMap = {
     faInstagram: faInstagram,
     faLinkedin: faLinkedin,
     faTwitter: faTwitter,
     faFacebook: faFacebook,
   };
-  
+
   useEffect(() => {
     const id = pathname.split("/").pop();
     const articleId = parseInt(id);
@@ -120,72 +138,84 @@ function ArticlePage() {
   useEffect(() => {
     if (currentArticle?.subParts?.length) {
       sectionRefs.current = {};
-      currentArticle.subParts.forEach(part => {
+      currentArticle.subParts.forEach((part) => {
         const element = document.getElementById(part);
         if (element) sectionRefs.current[part] = element;
       });
     }
   }, [currentArticle]);
+
   useEffect(() => {
     const handleScroll = () => {
       if (!currentArticle?.subParts?.length) return;
       const scrollPosition = window.scrollY + 150;
       let currentSection = currentArticle.subParts[0];
-      
+
       for (const section of currentArticle.subParts) {
         const element = sectionRefs.current[section];
         if (!element) continue;
-        
+
         const offsetTop = element.getBoundingClientRect().top + window.scrollY;
-        
+
         if (scrollPosition >= offsetTop) {
           currentSection = section;
         } else {
           break;
         }
       }
-      
+
       setActiveSection(currentSection);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     handleScroll();
-    
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [currentArticle]);
 
-  const recommendedArticles = articles.filter(article => 
-    article.id !== currentArticle?.id
+  const recommendedArticles = articles.filter(
+    (article) => article.id !== currentArticle?.id
   );
 
   if (!currentArticle) {
     return (
-      <div>
+      <div className={isDarkMode ? "bg-gray-900 text-white" : ""}>
         <BlogLoader />
       </div>
     );
   }
 
   return (
-    <div>
+    <div
+      className={`transition-all duration-700 ${
+        isDarkMode ? "bg-black text-white" : ""
+      }`}
+    >
       <div className="h-screen w-full relative">
         <Image
           src={`/${currentArticle.imageUrl}`}
           alt="Article Banner"
           fill
-          className="object-cover"
+          className={`object-cover transition-all duration-700 ${
+            isDarkMode ? "opacity-50" : "opacity-100"
+          }`}
         />
       </div>
 
-      <div className="mx-auto max-w-6xl lg:-top-52 flex gap-10 md:-top-40 sm:-top-32 -top-60 max-sm:mx-4 z-20 relative bg-white px-4 sm:px-6 lg:px-8">
+      <div
+        className={`mx-auto transition-all duration-700 max-w-6xl lg:-top-52 flex gap-10 md:-top-40 sm:-top-32 -top-60 max-sm:mx-4 z-20 relative ${
+          isDarkMode ? "bg-black text-white" : "bg-white text-black"
+        } px-4 sm:px-6 lg:px-8`}
+      >
         {currentArticle.subParts && currentArticle.subParts.length > 0 && (
           <div className="w-40 mt-64 relative max-md:hidden">
             <div className="sticky top-24">
-              <TableOfContents 
-                subParts={currentArticle.subParts} 
+              <TableOfContents
+                subParts={currentArticle.subParts}
                 activeSection={activeSection}
+                isDarkMode={isDarkMode}
               />
             </div>
           </div>
@@ -193,7 +223,11 @@ function ArticlePage() {
         <div>
           <div className="w-full max-w-2xl mx-auto">
             <div className="pt-8 sm:pt-12 md:pt-16 pb-4 text-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif mb-4 sm:mb-6 px-10">
+              <h1
+                className={`text-2xl sm:text-3xl md:text-4xl font-serif mb-4 sm:mb-6 px-10 ${
+                  isDarkMode ? "text-white" : ""
+                }`}
+              >
                 {currentArticle.title}
               </h1>
               <div className="flex justify-between flex-wrap max-sm:justify-center gap-6 items-center my-6">
@@ -216,18 +250,28 @@ function ArticlePage() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-black w-8 h-8 flex items-center justify-center hover:bg-neutral-800 transition-colors"
+                      className={`${
+                        isDarkMode
+                          ? "bg-white hover:bg-neutral-300"
+                          : "bg-black hover:bg-neutral-800"
+                      } w-8 h-8 flex items-center justify-center transition-colors`}
                       aria-label={social.name}
                     >
                       <FontAwesomeIcon
                         icon={iconMap[social.icon]}
-                        className="text-white text-lg sm:text-xl"
+                        className={`${
+                          isDarkMode ? "text-black" : "text-white"
+                        } text-lg sm:text-xl`}
                       />
                     </a>
                   ))}
                 </div>
               </div>
-              <div className="border-t border-b border-gray-300 py-4 sm:py-6 mb-6 sm:mb-8">
+              <div
+                className={`border-t border-b ${
+                  isDarkMode ? "border-gray-700" : "border-gray-300"
+                } py-4 sm:py-6 mb-6 sm:mb-8`}
+              >
                 <p className="text-xl max-w-lg mx-auto w-full sm:text-2xl italic font-light max-sm:text-lg">
                   {currentArticle.excerpt}
                 </p>
@@ -237,7 +281,11 @@ function ArticlePage() {
 
           <div className="article-content">
             {currentArticle.fullContent.map((section, index) => (
-              <ContentSection key={index} section={section} />
+              <ContentSection
+                key={index}
+                section={section}
+                isDarkMode={isDarkMode}
+              />
             ))}
           </div>
           {currentArticle.source && (
@@ -251,32 +299,44 @@ function ArticlePage() {
         <div className="w-40 max-md:hidden"></div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="font-serif text-2xl mb-6">Interesting Articles to Read</div>
+      <div
+        className={`max-w-6xl transition-all duration-700 mx-auto px-4 sm:px-6 lg:px-8 py-12`}
+      >
+        <div
+          className={`font-serif text-2xl mb-6 ${
+            isDarkMode ? "text-white" : ""
+          }`}
+        >
+          Interesting Articles to Read
+        </div>
         <div className="relative ml-4">
-        <Swiper
+          <Swiper
             modules={[Navigation]}
             spaceBetween={24}
             breakpoints={{
               1024: {
                 slidesPerView: 3,
-                spaceBetween: 24
+                spaceBetween: 24,
               },
               768: {
                 slidesPerView: 2,
-                spaceBetween: 20
+                spaceBetween: 20,
               },
               0: {
                 slidesPerView: 1,
-                spaceBetween: 16
-              }
+                spaceBetween: 16,
+              },
             }}
             className="w-full py-4 mx-auto"
           >
             {recommendedArticles.map((article) => (
               <SwiperSlide key={article.id}>
                 <div className="min-w-[330px] max-w-[340px]">
-                  <ArticleCard article={article} mode="card" />
+                  <ArticleCard
+                    article={article}
+                    mode="card"
+                    isDarkMode={isDarkMode}
+                  />
                 </div>
               </SwiperSlide>
             ))}

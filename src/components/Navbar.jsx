@@ -5,15 +5,16 @@ import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Newsletter from "./Newsletter";
 import SearchComponent from "./SearchComponent";
-import blogs from "../../utils/blogs";
+import DarkModeToggle from "./DarkModeToggle";
+import { useDarkMode } from "../../context/DarkModeContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
-  const [articles, setArticles] = useState(blogs.articles);
   const menuButtonRef = useRef(null);
   const circleRef = useRef(null);
   const pathname = usePathname();
+  const { isDarkMode } = useDarkMode();
 
   const closeMenu = () => {
     setAnimationComplete(false);
@@ -90,7 +91,9 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`fixed w-full z-50 px-4 sm:px-8 md:px-12 lg:px-24 xl:px-52 py-4 flex justify-between items-center ${isMenuOpen? "text-white":"text-black"}`}>
+      <nav className={`fixed w-full z-50 px-4 sm:px-8 md:px-12 lg:px-24 xl:px-52 py-4 flex justify-between items-center ${
+        isMenuOpen ? "text-white" : isDarkMode ? "text-white" : "text-black"
+      } transition-colors duration-300`}>
         <button
           ref={menuButtonRef}
           onClick={() => isMenuOpen ? closeMenu() : setIsMenuOpen(true)}
@@ -105,12 +108,16 @@ const Navbar = () => {
           <h1 className="text-lg font-serif">MindScribe </h1>
           <h1 className="text-lg font-serif px-4 border-l-2 max-sm:border-l-0 max-sm:border-t-1">Thought Journal </h1>
         </Link>
-        <SearchComponent />
+        
+        <div className="flex items-center gap-4">
+          <DarkModeToggle isMenuOpen={isMenuOpen}/>
+          <SearchComponent />
+        </div>
       </nav>
 
       <div 
         ref={circleRef}
-        className="fixed rounded-full bg-black/90 z-40 transition-all duration-500 ease-out"
+        className={`fixed rounded-full bg-black/90 z-40 transition-all duration-500 ease-out`}
         style={{
           transformOrigin: 'center',
           transform: 'translate(-50%, -50%)'

@@ -47,3 +47,39 @@
 .animate-pendulum {
   animation: pendulum 12s 0.5s infinite ease-out;
 }
+
+@keyframes move {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(100px, -50px) scale(1.1);
+  }
+  50% {
+    transform: translate(-80px, 70px) scale(0.9);
+  }
+  75% {
+    transform: translate(-100px, -30px) scale(1.05);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.animate-move {
+  animation: move 15s infinite alternate;
+  transition: all 0.5s ease-in-out;
+}
+
+@keyframes spin-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 1.5s linear infinite;
+}

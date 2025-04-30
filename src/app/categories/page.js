@@ -4,19 +4,21 @@ import blogs from "../../../utils/blogs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import { useDarkMode } from "../../../context/DarkModeContext";
 
 import "swiper/css";
 import "swiper/css/navigation";
 
 function Categoriespage() {
   const articles = blogs.articles;
+  const { isDarkMode } = useDarkMode();
 
   const uniqueCategories = [
     ...new Set(articles.map((article) => article.category)),
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen transition-all duration-500 ${isDarkMode ? "bg-black text-white" : ""}`}>
       <div className="w-full pt-28 overflow-hidden px-4 md:px-6">
         <div className="font-serif text-2xl md:text-3xl mb-8 md:mb-12 max-w-[68rem] mx-auto">
           Categories
@@ -36,13 +38,21 @@ function Categoriespage() {
                 <div className="text-lg md:text-xl font-serif">{category}</div>
                 <div className="flex gap-1 md:gap-2">
                   <button
-                    className={`swiper-custom-prev-${index} bg-black text-white p-1 md:p-2 hover:bg-gray-800 transition-colors`}
+                    className={`swiper-custom-prev-${index} ${
+                      isDarkMode 
+                        ? "bg-white text-black hover:bg-gray-200" 
+                        : "bg-black text-white hover:bg-gray-800"
+                    } p-1 md:p-2 transition-colors`}
                     aria-label="Previous"
                   >
                     <ChevronLeft size={16} className="md:w-5 md:h-5" />
                   </button>
                   <button
-                    className={`swiper-custom-next-${index} bg-black text-white p-1 md:p-2 hover:bg-gray-800 transition-colors`}
+                    className={`swiper-custom-next-${index} ${
+                      isDarkMode 
+                        ? "bg-white text-black hover:bg-gray-200" 
+                        : "bg-black text-white hover:bg-gray-800"
+                    } p-1 md:p-2 transition-colors`}
                     aria-label="Next"
                   >
                     <ChevronRight size={16} className="md:w-5 md:h-5" />

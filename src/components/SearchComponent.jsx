@@ -124,7 +124,7 @@ const SearchComponent = () => {
       </button>
 
       <div
-        className={`fixed inset-0 bg-black/75 backdrop-blur-sm z-50 transition-opacity duration-300 ${
+        className={`fixed inset-0 text-black bg-black/75 backdrop-blur-sm z-50 transition-opacity duration-300 ${
           isSearchOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >

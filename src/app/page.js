@@ -12,21 +12,40 @@ import CategorySection from "@/components/CategorySection";
 import { motion, AnimatePresence } from "framer-motion";
 import DestinationGuide from "@/components/DestinationGuide";
 import NextDestinationCard from "@/components/NextDestinationCard";
+import { useDarkMode } from "../../context/DarkModeContext";
 
 function Homepage() {
   const [heroArticles, setHeroArticles] = useState(blogs.articles);
   const [allArticles, setAllArticles] = useState(blogs.articles);
   const [filteredArticles, setFilteredArticles] = useState(blogs.articles);
-  
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState("right");
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageTransition, setPageTransition] = useState("next");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const articlesPerPage = currentPage === 1 ? 6 : 6;
+  const { isDarkMode } = useDarkMode();
 
+  const [circles] = useState(() => Array(6).fill(null));
+  const BlurCircle = ({ size, delay }) => {
+    const style = {
+      width: size,
+      height: size,
+      animationDelay: `${delay}s`,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+    };
+
+    return (
+      <div
+        className="absolute bg-gradient-to-r from-white-500/20 to-blue-500/20 rounded-full blur-2xl animate-move"
+        style={style}
+      />
+    );
+  };
   useEffect(() => {
     if (selectedCategory === "All") {
       setFilteredArticles(allArticles);
@@ -86,13 +105,29 @@ function Homepage() {
   };
 
   return (
-    <div className="relative w-full">
+    <div
+      className={`relative transition-all duration-700 ${
+        isDarkMode ? "bg-gradient-to-br from-[#020708] to-black " : "bg-white"
+      } w-full`}
+    >
+      {isDarkMode && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {circles.map((_, i) => (
+            <BlurCircle
+              key={i}
+              size={`${Math.random() * 400 + 200}px`}
+              delay={Math.random() * 5}
+            />
+          ))}
+        </div>
+      )}
+
       <div className="relative w-full h-screen">
         <div className="absolute inset-0 w-full h-full overflow-hidden">
           {heroArticles.map((article, index) => (
             <div
               key={article.id}
-              className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+              className={`absolute inset-0 bg-black transition-all duration-700 ease-in-out ${
                 index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
             >
@@ -100,7 +135,9 @@ function Homepage() {
                 src={`/${article.imageUrl}`}
                 alt={article.title}
                 fill
-                className="object-cover"
+                className={`object-cover transition-all duration-700 ${
+                  isDarkMode ? "opacity-50" : "opacity-100"
+                }`}
                 priority={index === currentIndex}
               />
             </div>
@@ -109,7 +146,11 @@ function Homepage() {
 
         <div className="mx-auto w-full h-full relative px-4 flex items-end">
           <div
-            className={`bg-white shadow-lg z-20 transition-all duration-500 ease-in-out flex justify-center items-center ${
+            className={`${
+              isDarkMode
+                ? "bg-black/20 backdrop-blur-md border border-white/20 shadow-inner"
+                : "bg-white"
+            } shadow-lg z-20 transition-all duration-500 ease-in-out flex justify-center items-center ${
               isAnimating
                 ? direction === "right"
                   ? "-translate-x-10 opacity-0"
@@ -124,18 +165,36 @@ function Homepage() {
           >
             <div>
               <div className="mb-3 md:mb-4">
-                <span className="text-xs sm:text-sm text-gray-600 font-medium">
+                <span
+                  className={`text-xs sm:text-sm  ${
+                    isDarkMode ? "text-white" : "text-gray-600"
+                  } font-medium`}
+                >
                   {currentArticle.category}
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-cormorant-garamond font-semibold mb-3 md:mb-4 leading-tight">
+              <h1
+                className={`${
+                  isDarkMode ? "text-white" : "text-black"
+                } text-2xl sm:text-3xl md:text-4xl font-cormorant-garamond font-semibold mb-3 md:mb-4 leading-tight`}
+              >
                 {currentArticle.title}
               </h1>
-              <p className="text-gray-400 mb-4 md:mb-6 text-sm sm:text-base">
+              <p
+                className={`${
+                  isDarkMode ? "text-neutral-300" : "text-gray-400"
+                } mb-4 md:mb-6 text-sm sm:text-base`}
+              >
                 {truncateText(currentArticle.excerpt)}
               </p>
               <Link href={`/articles/${currentArticle.id}`}>
-                <span className="inline-block bg-black text-white px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">
+                <span
+                  className={`inline-block ${
+                    isDarkMode
+                      ? "bg-white text-black hover:bg-neutral-300"
+                      : "bg-black text-white hover:bg-gray-800"
+                  } px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium  transition-colors`}
+                >
                   Read more
                 </span>
               </Link>
@@ -143,7 +202,11 @@ function Homepage() {
               <div className="absolute top-0 right-0 flex sm:-right-14">
                 <button
                   onClick={handlePrev}
-                  className="bg-black text-white p-2 sm:p-4 hover:bg-gray-800 transition-colors"
+                  className={`${
+                    isDarkMode
+                      ? "bg-black/70 text-white"
+                      : "bg-black text-white"
+                  } p-2 sm:p-4 hover:bg-gray-800 transition-colors`}
                   aria-label="Previous"
                 >
                   <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
@@ -170,7 +233,11 @@ function Homepage() {
         <div className="flex max-lg:flex-wrap w-full gap-12">
           <div className="w-full">
             <div>
-              <h1 className="text-3xl font-serif mb-8">
+              <h1
+                className={`text-3xl font-serif mb-8 ${
+                  isDarkMode ? "text-white" : ""
+                }`}
+              >
                 {selectedCategory === "All"
                   ? "Recent articles"
                   : `${selectedCategory} articles`}
@@ -178,7 +245,11 @@ function Homepage() {
 
               {filteredArticles.length === 0 ? (
                 <div className="py-16 text-center">
-                  <h3 className="text-xl font-medium text-gray-600">
+                  <h3
+                    className={`text-xl font-medium ${
+                      isDarkMode ? "text-white" : "text-gray-600"
+                    }`}
+                  >
                     No articles found in this category.
                   </h3>
                   <button
@@ -251,14 +322,18 @@ function Homepage() {
                             currentPage === idx + 1
                               ? "border border-gray-300"
                               : ""
-                          }`}
+                          } ${isDarkMode ? "text-white" : ""}`}
                         >
                           {idx + 1}
                         </button>
                       ))}
 
                       {totalPages > 5 && currentPage < totalPages - 2 && (
-                        <span className="mx-1">...</span>
+                        <span
+                          className={`mx-1 ${isDarkMode ? "text-white" : ""}`}
+                        >
+                          ...
+                        </span>
                       )}
 
                       {totalPages > 5 && currentPage < totalPages - 1 && (
@@ -268,7 +343,7 @@ function Homepage() {
                             currentPage === totalPages
                               ? "border border-gray-300"
                               : ""
-                          }`}
+                          } ${isDarkMode ? "text-white" : ""}`}
                         >
                           {totalPages}
                         </button>
