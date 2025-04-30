@@ -1,4 +1,4 @@
-# 🌸 Mother's Day Tribute Blog
+# 🌸 MindScribe - Thought Journal
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/d1f776c8-55b1-4457-bbd0-9aa78bf54e86" alt="Mother's Day Tribute Blog Banner" width="800"/>
@@ -11,7 +11,7 @@
 
 ## 📝 Overview
 
-A beautiful, responsive tribute mini-blog website built using **Next.js** and **TailwindCSS**, inspired by the provided [Figma design](https://www.figma.com/design/tIfqg7le60kPQk4Zc03NQC/Blog-Template-Light?node-id=0-419&t=h5r9GanCMh7Rn0DB-1). The project was developed for ExpertHire's frontend challenge for Mother's Day within a timeframe of 2 days.
+A beautiful, responsive mini-blog website built using **Next.js** and **TailwindCSS**, inspired by the provided [Figma design](https://www.figma.com/design/tIfqg7le60kPQk4Zc03NQC/Blog-Template-Light?node-id=0-419&t=h5r9GanCMh7Rn0DB-1). The project was developed for ExpertHire's frontend challenge for Mother's Day within a timeframe of 2 days.
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/4af12815-cbcd-4bcc-9b76-68c19e2ae156" alt="Desktop View" width="600"/>
