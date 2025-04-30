@@ -30,7 +30,7 @@ const AuthorProfile = () => {
       </div>
 
       <p className="text-neutral-500 text-center text-sm mb-6">
-        For as long as I can remember I've been obsessed with the idea of
+        For as long as I can remember I&apos;ve been obsessed with the idea of
         travel. I was always that person who was forever daydreaming of foreign
         lands and unfamiliar cultures; coming up with travel itineraries that
         would challenge my perceptions and help me gain a deeper understanding

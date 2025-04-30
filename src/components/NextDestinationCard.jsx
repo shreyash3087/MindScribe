@@ -17,7 +17,7 @@ function NextDestinationCard() {
         Where to next?
       </h2>
       <p className="mb-6 text-sm text-neutral-400">
-        There's a wide world waiting for you
+        There&apos;s a wide world waiting for you
       </p>
       <div className="flex border-gray-500 flex-wrap gap-4">
         <div className={`border-b w-full ${focusedField === "destination" ? "border-black border-b-2" : "border-gray-500"}`}>

@@ -66,7 +66,7 @@ function Newsletter({ theme = "white" }) {
               </div>
               <div className="mt-4">
                 <p className="text-sm text-gray-600">
-                  We're excited to share our exclusive content, travel insights, and photography tips with you. 
+                  We&apos;re excited to share our exclusive content, travel insights, and photography tips with you. 
                   Keep an eye on your inbox!
                 </p>
               </div>

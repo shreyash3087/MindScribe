@@ -3,7 +3,7 @@ import Link from "next/link";
 const NotFound = () => {
   return (
     <>
-      <main className="h-screen w-full bg-white flex flex-col justify-center items-center font-['Merriweather_Sans',sans-serif]">
+      <main className="h-screen w-full bg-white flex flex-col justify-center items-center">
         <svg
           viewBox="0 0 541.17206 328.45184"
           className="w-64 md:w-96"
