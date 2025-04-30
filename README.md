@@ -18,10 +18,13 @@ A beautiful, responsive mini-blog website built using **Next.js** and **Tailwind
   <img src="https://github.com/user-attachments/assets/abedfa31-0c7d-4c0f-a1bb-06c630a7fead" alt="Mobile View" width="160"/>
 </div>
 
+## Deployment Preview - https://mind-scribe-ten.vercel.app/
+
 ## ✨ Features
 
 - 📖 **Dynamic Blog Articles** - Dynamic pages for each story
-- 🔍 **Advanced Search** - Find stories by keyword
+- 🔍 **Search Bar** - Find stories by keyword
+- 💫 **Darkmode Toggle** - Darkmode Implementation through Context API
 - 🏷️ **Category Filters** - Browse stories by themes like "Travels", "Food", etc.
 - 🗂️ **Categories Page** - Dedicated section to explore themed content
 - 📸 **Instagram Highlights** - Carousels for Instagram Highlights
@@ -30,6 +33,7 @@ A beautiful, responsive mini-blog website built using **Next.js** and **Tailwind
 - 💫 **Smooth Animations** - Subtle transitions and effects
 - 📞 **About & Contact Pages** - Connect with the project developer
 - ⚠️ **Custom 404 Page** - Stylish error handling
+- **And May More Small Details**
 
 ## 🚀 Getting Started
 
